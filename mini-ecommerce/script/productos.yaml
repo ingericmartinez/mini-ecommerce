@@ -1,0 +1,410 @@
+openapi: 3.0.0
+info:
+  title: API de E-Commerce (v2)
+  version: "1.0.1"
+  description: |
+    Esta API proporciona una interfaz RESTful para gestionar un sistema de comercio electrónico. Esta versión incluye la gestión completa de categorías, proveedores y validaciones de datos.
+    
+    ### Funcionalidades de Negocio Soportadas:
+    
+    * **📦 Gestión de Catálogo y Productos**: CRUD completo de productos y categorías.
+    * **👥 Gestión de Clientes (CRM)**: CRUD completo de clientes y consulta de su historial de pedidos.
+    * **🛒 Procesamiento de Pedidos**: Creación y consulta detallada de pedidos.
+    * **🚚 Gestión de Proveedores y Suministros**: CRUD completo de proveedores y la capacidad de asociarlos a productos específicos.
+
+servers:
+  - url: https://api.example.com/v1
+    description: Servidor de producción
+
+paths:
+  # --- Endpoints de Productos ---
+  /products:
+    get:
+      summary: Obtener lista de productos
+      responses:
+        '200':
+          description: Una lista de productos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      summary: Crear un nuevo producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '201':
+          description: Producto creado.
+
+  /products/{productId}:
+    get:
+      summary: Obtener un producto por ID
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del producto.
+        '404':
+          description: Producto no encontrado.
+
+  # --- NUEVA SECCIÓN: Relación Producto-Proveedor ---
+  /products/{productId}/suppliers:
+    get:
+      summary: Listar los proveedores de un producto específico
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Una lista de proveedores para el producto.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Supplier'
+        '404':
+          description: Producto no encontrado.
+
+  # --- Endpoints de Clientes ---
+  /customers:
+    get:
+      summary: Obtener lista de clientes
+      responses:
+        '200':
+          description: Una lista de clientes.
+    post:
+      summary: Crear un nuevo cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInput'
+      responses:
+        '201':
+          description: Cliente creado.
+
+  /customers/{customerId}:
+    get:
+      summary: Obtener un cliente por ID
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del cliente.
+        '404':
+          description: Cliente no encontrado.
+          
+  /customers/{customerId}/orders:
+    get:
+      summary: Obtener los pedidos de un cliente específico
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de pedidos del cliente.
+        '404':
+          description: Cliente no encontrado.
+
+  # --- Endpoints de Pedidos ---
+  /orders:
+    post:
+      summary: Crear un nuevo pedido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+      responses:
+        '201':
+          description: Pedido creado.
+
+  /orders/{orderId}:
+    get:
+      summary: Obtener un pedido por ID
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del pedido.
+        '404':
+          description: Pedido no encontrado.
+  
+  # --- NUEVA SECCIÓN: Endpoints de Categorías ---
+  /categories:
+    get:
+      summary: Obtener lista de categorías
+      responses:
+        '200':
+          description: Una lista de categorías.
+    post:
+      summary: Crear una nueva categoría
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryInput'
+      responses:
+        '201':
+          description: Categoría creada.
+
+  /categories/{categoryId}:
+    get:
+      summary: Obtener una categoría por ID
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles de la categoría.
+        '404':
+          description: Categoría no encontrada.
+    put:
+      summary: Actualizar una categoría existente
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryInput'
+      responses:
+        '200':
+          description: Categoría actualizada.
+        '404':
+          description: Categoría no encontrada.
+    delete:
+      summary: Eliminar una categoría
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Categoría eliminada con éxito.
+        '404':
+          description: Categoría no encontrada.
+
+  # --- NUEVA SECCIÓN: Endpoints de Proveedores ---
+  /suppliers:
+    get:
+      summary: Obtener lista de proveedores
+      responses:
+        '200':
+          description: Una lista de proveedores.
+    post:
+      summary: Crear un nuevo proveedor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierInput'
+      responses:
+        '201':
+          description: Proveedor creado.
+
+  /suppliers/{supplierId}:
+    get:
+      summary: Obtener un proveedor por ID
+      parameters:
+        - name: supplierId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles del proveedor.
+        '404':
+          description: Proveedor no encontrado.
+    put:
+      summary: Actualizar un proveedor existente
+      parameters:
+        - name: supplierId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierInput'
+      responses:
+        '200':
+          description: Proveedor actualizado.
+        '404':
+          description: Proveedor no encontrado.
+    delete:
+      summary: Eliminar un proveedor
+      parameters:
+        - name: supplierId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Proveedor eliminado con éxito.
+        '404':
+          description: Proveedor no encontrado.
+
+components:
+  schemas:
+    # --- Esquemas de Entrada (para POST/PUT) con validaciones ---
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+          minimum: 0 # VALIDACIÓN AÑADIDA
+        categoryId:
+          type: integer
+      required: [name, price, categoryId]
+    
+    CustomerInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+          maxLength: 100 # VALIDACIÓN AÑADIDA
+      required: [name, email]
+
+    OrderInput:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        orderDate:
+          type: string
+          format: date
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: integer
+              quantity:
+                type: integer
+                minimum: 1
+      required: [customerId, orderDate, items]
+
+    CategoryInput:
+      type: object
+      properties:
+        categoryName:
+          type: string
+      required: [categoryName]
+      
+    SupplierInput:
+      type: object
+      properties:
+        supplierName:
+          type: string
+        contactEmail:
+          type: string
+          format: email
+          maxLength: 100 # VALIDACIÓN AÑADIDA
+      required: [supplierName, contactEmail]
+
+    # --- Esquemas de Salida (para GET) ---
+    Product:
+      type: object
+      properties:
+        productId:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        categoryId:
+          type: integer
+
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: integer
+        customerId:
+          type: integer
+        orderDate:
+          type: string
+          format: date
+          
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+        categoryName:
+          type: string
+
+    Supplier:
+      type: object
+      properties:
+        supplierId:
+          type: integer
+        supplierName:
+          type: string
+        contactEmail:
+          type: string
+          format: email

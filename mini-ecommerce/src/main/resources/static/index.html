@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Documentación de la API de E-Commerce</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; margin: 0; padding: 0; background: #0f172a; color: #e2e8f0; }
+    .container { max-width: 960px; margin: 0 auto; padding: 48px 16px; }
+    h1 { font-size: 2rem; margin: 0 0 8px; }
+    p.lead { color: #cbd5e1; margin: 0 0 24px; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 24px; }
+    ul.links { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    a { color: #60a5fa; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { background: #1f2937; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Portal de Documentación de la API de E-Commerce</h1>
+    <p class="lead">Bienvenido. Esta API RESTful permite gestionar el catálogo, clientes, pedidos y proveedores para un sistema de comercio electrónico.</p>
+
+    <div class="card">
+      <h2>Recursos</h2>
+      <ul class="links">
+        <li>
+          <strong>Swagger UI:</strong>
+          <a href="/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a>
+        </li>
+        <li>
+          <strong>OpenAPI JSON:</strong>
+          <a href="/v1/api-docs" target="_blank" rel="noopener">http://localhost:8080/v1/api-docs</a>
+        </li>
+        <li>
+          <strong>Consola H2:</strong>
+          <a href="/h2-console" target="_blank" rel="noopener">http://localhost:8080/h2-console</a>
+        </li>
+      </ul>
+      <div style="margin-top:16px; color:#cbd5e1">
+        <p><strong>Para conectar en H2 Console usa:</strong></p>
+        <ul>
+          <li>JDBC URL: <code>jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</code></li>
+          <li>User Name: <code>sa</code></li>
+          <li>Password: <em>(dejar vacío)</em></li>
+        </ul>
+        <p>Si ves una URL por defecto como <code>jdbc:h2:~/test</code>, reemplázala por la anterior para evitar el error de base de datos de archivo no encontrada.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px; color:#cbd5e1">
+      <h2>Seguridad y CORS</h2>
+      <ul>
+        <li>La seguridad está <strong>activada</strong>. Autenticación: <code>HTTP Basic</code>.</li>
+        <li>Usuarios de prueba: <code>user/user123</code> (rol USER) y <code>admin/admin123</code> (rol ADMIN).</li>
+        <li>Las solicitudes <strong>GET</strong> a <code>/api/v1/ecommerce/**</code> son públicas. Operaciones de escritura (POST/PUT/PATCH/DELETE) requieren autenticación.</li>
+        <li>CORS habilitado para <code>http://localhost:5173</code> y <code>http://127.0.0.1:5173</code> (Vite).</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
